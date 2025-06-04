@@ -4,60 +4,44 @@ import java.util.ArrayList;
 
 public class InsertInterval {
 
-    public static void main(String[] args) {
-
-        //int[][] intervals = {{1,3},{3,5},{6,7},{8,10},{12,16}};
-        int[][] intervals = {{1,3},{6,9}};
-        int[] newInterval = {2,5};
-        ArrayList<Datax> datax= insert(intervals,newInterval);
-        for(Datax d :  datax){
-            System.out.print("[" + d.start + "," + d.end + "] ");
+    public int[][] insert(int[][] interval, int[] newInterval) {
+        int startTimeInt = newInterval[0];
+        int endTimeInt = newInterval[1];
+        int n = interval.length;
+        ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
+        int i = 0;
+        while(i < n && interval[i][1] < startTimeInt){
+            ArrayList<Integer> list1 = new ArrayList<>();
+            list1.add(interval[i][0]);
+            list1.add(interval[i][1]);
+            arr.add(list1);
+            i++;
         }
 
-
-    }
-
-    public static ArrayList<Datax> insert(int[][] intervals, int[] newInterval) {
-
-        int startIndex = -1;
-        int endIndex = -1;
-        ArrayList<Datax> data = new ArrayList<>();
-        int startTimeInt  = newInterval[0];
-        int endTimeInt  = newInterval[1];
-        boolean flag = false;
-        for(int i = 0; i <= intervals.length-1; i++){
-
-            if(startIndex == -1 && startTimeInt <= intervals[i][1]){
-                startIndex = intervals[i][0];
-            }
-
-            if(endIndex == -1 && endTimeInt <= intervals[i][1]){
-                endIndex = intervals[i][1];
-            }
-
-            if(startIndex != -1 && endIndex != -1 && flag == false){
-                data.add(new Datax(startIndex, endIndex));
-                System.out.println(startIndex + " - " + i +  " -xxx- " + endIndex);
-                flag = true;
-            }
-
-            if((intervals[i][0] < startTimeInt && intervals[i][1] < startTimeInt) ||
-                    (intervals[i][0] > endTimeInt && intervals[i][0] > endTimeInt)){
-                data.add(new Datax(intervals[i][0], intervals[i][1]));
-                System.out.println(intervals[i][0] + " - " + i + " -- " + intervals[i][1]);
-            }
+        while(i < n && interval[i][0] <= endTimeInt){
+            startTimeInt = Math.min(startTimeInt, interval[i][0]);
+            endTimeInt = Math.max(endTimeInt, interval[i][1]);
+            i++;
         }
-        return data;
-    }
-}
-class Datax{
-    int start;
-    int end;
+        ArrayList<Integer> list2 = new ArrayList<>();
+        list2.add(startTimeInt);
+        list2.add(endTimeInt);
+        arr.add(list2);
 
-    Datax (int start, int end)
-    {
-        this.start = start;
-        this.end = end;
+        while(i < n){
+            ArrayList<Integer> list3 = new ArrayList<>();
+            list3.add(interval[i][0]);
+            list3.add(interval[i][1]);
+            arr.add(list3);
+            i++;
+        }
+
+        int[][] output = new int[arr.size()][2];
+        for(int k = 0; k <= arr.size()-1; k++){
+            output[k][0] = arr.get(k).get(0);
+            output[k][1] = arr.get(k).get(1);
+        }
+        return output;
     }
 }
 
